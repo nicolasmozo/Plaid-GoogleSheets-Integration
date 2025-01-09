@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Plaid Integration</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+
+<body>
+  <button id="link-button"> Connect Your Bank</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var linkHandler = Plaid.create({
+          token: PLAID_LINK_TOKEN,
+          onSuccess: function(public_token, metadata){
+            google.script.run.exchangePublicToken(public_token);
+            alert('Bank account linked successfully!');
+          },
+          onExit: function(err, metadata){ // 
+            if (err != null){
+              console.error('Error', err);
+            }
+            console.log('Metadata:', metadata);
+          }
+        });
+
+        document.getElementById('link-button').addEventListener('click', function(){
+          linkHandler.open();
+        });
+      });
+  </script>
+
+</body>
+
+</html>
